@@ -2,11 +2,17 @@ import express from 'express';
 import cors from 'cors';
 import mongoose from 'mongoose';
 
+import routes from './routes';
+
 class App {
   public express: express.Application;
 
   public constructor() {
     this.express = express();
+
+    this.middlewares();
+    this.database();
+    this.routes();
   }
 
   private middlewares(): void {
@@ -15,12 +21,14 @@ class App {
   }
 
   private database(): void {
-    mongoose.connect('mongodb://localhost:3333/tsnode', {
+    mongoose.connect('mongodb://localhost:27017/database', {
       useNewUrlParser: true,
     });
   }
 
   private routes(): void {
-    this.express.get('/', (req, res) => res.send('Hello world'));
+    this.express.use(routes);
   }
 }
+
+export default new App().express;
